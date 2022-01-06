@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	user_server_address = "localhost:9092"
+	userServerAddress = "localhost:9092"
 )
 
 func main() {
-	conn, err := grpc.Dial(user_server_address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(userServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect %v", err)
 	}
@@ -37,12 +37,13 @@ func main() {
 
 	defer cancel()
 
-	var new_users = make(map[string]int32)
+	var newUsers = make(map[string]int32)
 
-	new_users["Qi"] = 39
-	new_users["Ellen"] = 40
+	newUsers["Espen"] = 25
+	newUsers["Qi"] = 39
+	newUsers["Stig"] = 50
 
-	for name, age := range new_users {
+	for name, age := range newUsers {
 		r, err := c.CreateUser(ctx, &proto.NewUser{Name: name, Age: age})
 		if err != nil {
 			log.Fatalf("could not create user %v", err)

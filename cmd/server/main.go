@@ -15,15 +15,18 @@ const (
 	port = ":9092"
 )
 
+// UserServer that implements the pb API
 type UserServer struct {
-	user_list *proto.UserList
+	userList *proto.UserList
 	proto.UnimplementedUserServiceServer
 }
 
-func NewUserManagementServer() *UserServer {
-	return &UserServer{user_list: &proto.UserList{}}
+// NewUserServer creates a new Service instance
+func NewUserServer() *UserServer {
+	return &UserServer{userList: &proto.UserList{}}
 }
 
+// Run grpc server
 func (server *UserServer) Run() error {
 	lis, err := net.Listen("tcp", port)
 
@@ -39,24 +42,26 @@ func (server *UserServer) Run() error {
 	return gs.Serve(lis)
 }
 
-func (s *UserServer) CreateUser(ctx context.Context, in *proto.NewUser) (*proto.User, error) {
+// CreateUser implementation
+func (server *UserServer) CreateUser(ctx context.Context, in *proto.NewUser) (*proto.User, error) {
 	log.Printf("Handle CreateUser %v", in.GetName())
-	var user_id int32 = int32(rand.Intn(1000))
+	var userID = int32(rand.Intn(1000))
 
-	created_user := &proto.User{Id: user_id, Name: in.GetName(), Age: in.GetAge()}
-	s.user_list.Users = append(s.user_list.Users, created_user)
+	createdUser := &proto.User{Id: userID, Name: in.GetName(), Age: in.GetAge()}
+	server.userList.Users = append(server.userList.Users, createdUser)
 
-	return created_user, nil
+	return createdUser, nil
 }
 
-func (s *UserServer) GetUser(ctx context.Context, in *proto.GetUsersParams) (*proto.UserList, error) {
-	return s.user_list, nil
+// GetUser implementation
+func (server *UserServer) GetUser(ctx context.Context, in *proto.GetUsersParams) (*proto.UserList, error) {
+	return server.userList, nil
 }
 
 func main() {
-	var user_management_server *UserServer = NewUserManagementServer()
+	var userManagementServer = NewUserServer()
 
-	if err := user_management_server.Run(); err != nil {
+	if err := userManagementServer.Run(); err != nil {
 		log.Fatalf("failed to serve %v", err)
 	}
 }

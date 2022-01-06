@@ -3,7 +3,7 @@ module buf_build_bsr_use
 go 1.17
 
 require (
-	go.buf.build/library/go-grpc/ebobo/test v1.4.1
+	go.buf.build/library/go-grpc/ebobo/test v1.4.3
 	google.golang.org/grpc v1.43.0
 )
 
